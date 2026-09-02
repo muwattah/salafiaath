@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bestellen | Salafiaath</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="logo"><span class="logo-mark">S</span> Salafiaath <span>| modest wear</span></a>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="index.html#collectie">Collectie</a>
+        <a href="bestellen.html" class="active">Bestellen</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="section">
+      <div class="container" style="max-width:640px;">
+        <h1>Bestelling aanvragen</h1>
+        <p>Vul het formulier in. Wij nemen contact met je op. Je kunt ook via Instagram DM bestellen.</p>
+        <form action="https://formsubmit.co/abshir.be@hotmail.com" method="POST" style="display:grid;gap:1rem;margin-top:2rem;">
+          <input type="hidden" name="_subject" value="Nieuwe aanvraag Salafiaath">
+          <input type="text" name="naam" placeholder="Volledige naam" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
+          <input type="email" name="email" placeholder="E-mailadres" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
+          <input type="tel" name="telefoon" placeholder="Telefoonnummer" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
+          <select name="product" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
+            <option value="">Wat wil je bestellen?</option>
+            <option>Lange khimaar (standaard)</option>
+            <option>Lange khimaar op maat</option>
+            <option>Extra lange khimaar</option>
+          </select>
+          <textarea name="opmerkingen" placeholder="Kleur, lengte, opmerkingen" style="min-height:110px;padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);"></textarea>
+          <button class="btn btn-primary" type="submit">Aanvraag versturen</button>
+        </form>
+        <p style="margin-top:1.5rem;">Liever Instagram? <a href="https://www.instagram.com/salafiaath/" target="_blank" rel="noopener">DM @salafiaath</a></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
