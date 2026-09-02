@@ -1,3 +1,26 @@
 .product-image{aspect-ratio:3/4;background:#fff;display:block;overflow:hidden;padding:0;border-bottom:1px solid rgba(247,244,239,.12)}
 .product-image img,.ambacht-visual img{width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block}
 .ambacht-visual{padding:0!important;overflow:hidden;background:#fff}
+.page-header{padding:4rem 0 2.5rem;text-align:center;border-bottom:1px solid rgba(247,244,239,.12);background:#1a1a1a}
+.page-header p{max-width:34rem;margin:0 auto}
+.form-section{padding:3.5rem 0 5rem}
+.form-wrapper{max-width:600px;margin:0 auto;background:#1a1a1a;border:1px solid rgba(247,244,239,.12);overflow:hidden}
+.form-progress{display:flex;border-bottom:1px solid rgba(247,244,239,.12)}
+.progress-step{flex:1;text-align:center;padding:1rem .4rem;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:#6b6b6b}
+.progress-step.active{color:#F7F4EF;background:#000}
+.form-step{display:none;padding:2rem 1.75rem 1.5rem}
+.form-step.active{display:block}
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;font-size:.85rem;margin-bottom:.4rem;color:#F7F4EF}
+.form-group .required{color:#c45c5c}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.8rem 1rem;border:1px solid rgba(247,244,239,.22);border-radius:4px;font-size:1rem;font-family:inherit;background:#000;color:#F7F4EF}
+.form-group textarea{min-height:110px}
+.form-group .hint,.form-group .error-msg{font-size:.78rem;margin-top:.3rem;color:#6b6b6b}
+.form-group .error-msg{display:none;color:#c45c5c}
+.form-group.error .error-msg{display:block}
+.radio-group{display:flex;flex-direction:column;gap:.55rem}
+.radio-option,.checkbox-option{display:flex;align-items:center;gap:.65rem;padding:.7rem .9rem;border:1px solid rgba(247,244,239,.12);border-radius:4px;cursor:pointer;color:#B8B2A8}
+.form-nav{display:flex;justify-content:space-between;gap:1rem;padding:1.25rem 1.75rem 1.75rem;border-top:1px solid rgba(247,244,239,.12);background:#000}
+.form-success{display:none;text-align:center;padding:3.5rem 2rem}
+.form-success.show{display:block}
+.form-success .icon{width:64px;height:64px;margin:0 auto 1.4rem;background:#4a7c59;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem}
