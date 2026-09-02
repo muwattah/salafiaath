@@ -3,42 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bestellen | Salafiaath</title>
+  <title>Bestelling aanvragen | Salafiaath</title>
+  <meta name="description" content="Vraag een handgemaakte lange khimaar aan bij Salafiaath. Vul het formulier in.">
+  <meta name="robots" content="noindex">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="header">
     <div class="container nav">
-      <a href="index.html" class="logo"><span class="logo-mark">S</span> Salafiaath <span>| modest wear</span></a>
+      <a href="index.html" class="logo">
+        <span class="logo-mark">S</span>
+        Salafiaath <span>| modest wear</span>
+      </a>
+      <button class="menu-toggle" aria-label="Menu openen" id="menuToggle">
+        <span></span><span></span><span></span>
+      </button>
       <nav class="nav-links" id="navLinks">
         <a href="index.html">Home</a>
         <a href="index.html#collectie">Collectie</a>
         <a href="bestellen.html" class="active">Bestellen</a>
+        <a href="index.html#over">Over Ons</a>
+        <a href="index.html#contact">Contact</a>
       </nav>
     </div>
   </header>
   <main>
-    <section class="section">
-      <div class="container" style="max-width:640px;">
+    <div class="page-header">
+      <div class="container">
         <h1>Bestelling aanvragen</h1>
-        <p>Vul het formulier in. Wij nemen contact met je op. Je kunt ook via Instagram DM bestellen.</p>
-        <form action="https://formsubmit.co/abshir.be@hotmail.com" method="POST" style="display:grid;gap:1rem;margin-top:2rem;">
-          <input type="hidden" name="_subject" value="Nieuwe aanvraag Salafiaath">
-          <input type="text" name="naam" placeholder="Volledige naam" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
-          <input type="email" name="email" placeholder="E-mailadres" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
-          <input type="tel" name="telefoon" placeholder="Telefoonnummer" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
-          <select name="product" required style="padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);">
-            <option value="">Wat wil je bestellen?</option>
-            <option>Lange khimaar (standaard)</option>
-            <option>Lange khimaar op maat</option>
-            <option>Extra lange khimaar</option>
-          </select>
-          <textarea name="opmerkingen" placeholder="Kleur, lengte, opmerkingen" style="min-height:110px;padding:.8rem 1rem;background:#000;color:#F7F4EF;border:1px solid rgba(247,244,239,.22);"></textarea>
-          <button class="btn btn-primary" type="submit">Aanvraag versturen</button>
-        </form>
-        <p style="margin-top:1.5rem;">Liever Instagram? <a href="https://www.instagram.com/salafiaath/" target="_blank" rel="noopener">DM @salafiaath</a></p>
+        <p>Vul onderstaand formulier in. Wij ontvangen je aanvraag en nemen zo snel mogelijk contact met je op. Er is nog geen betaling nodig. Je kunt ook via Instagram DM bestellen.</p>
+      </div>
+    </div>
+    <section class="form-section">
+      <div class="container">
+        <div class="form-wrapper">
+          <div class="form-progress" id="formProgress">
+            <div class="progress-step active" data-step="1"><span>1</span> Gegevens</div>
+            <div class="progress-step" data-step="2"><span>2</span> Bestelling</div>
+            <div class="progress-step" data-step="3"><span>3</span> Extra</div>
+          </div>
+          <form id="orderForm" action="https://formsubmit.co/ajax/abshir.be@hotmail.com" method="POST" novalidate>
+            <input type="hidden" name="_subject" value="Nieuwe aanvraag via Salafiaath website">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="form-step active" data-step="1">
+              <h2>Jouw gegevens</h2>
+              <p class="step-desc">Vul je contactgegevens in zodat wij je kunnen bereiken.</p>
+              <div class="form-group" data-field="naam">
+                <label for="naam">Volledige naam <span class="required">*</span></label>
+                <input type="text" id="naam" name="naam" required placeholder="Voor- en achternaam" autocomplete="name">
+                <div class="error-msg">Vul je naam in.</div>
+              </div>
+              <div class="form-group" data-field="email">
+                <label for="email">E-mailadres <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="naam@voorbeeld.nl" autocomplete="email">
+                <div class="error-msg">Vul een geldig e-mailadres in.</div>
+              </div>
+              <div class="form-group" data-field="telefoon">
+                <label for="telefoon">Telefoonnummer <span class="required">*</span></label>
+                <input type="tel" id="telefoon" name="telefoon" required placeholder="06 12345678" autocomplete="tel">
+                <div class="error-msg">Vul een telefoonnummer in.</div>
+              </div>
+              <div class="form-group" data-field="plaats">
+                <label for="plaats">Woonplaats</label>
+                <input type="text" id="plaats" name="plaats" placeholder="Bijv. Amsterdam" autocomplete="address-level2">
+              </div>
+            </div>
+            <div class="form-step" data-step="2">
+              <h2>Jouw bestelling</h2>
+              <p class="step-desc">Vertel ons wat je wilt bestellen.</p>
+              <div class="form-group" data-field="product">
+                <label>Wat wil je bestellen? <span class="required">*</span></label>
+                <div class="radio-group">
+                  <label class="radio-option"><input type="radio" name="product" value="Lange khimaar (standaard)" required> Lange khimaar (standaard)</label>
+                  <label class="radio-option"><input type="radio" name="product" value="Lange khimaar (op maat / custom)"> Lange khimaar op maat / custom</label>
+                  <label class="radio-option"><input type="radio" name="product" value="Extra lange khimaar"> Extra lange khimaar</label>
+                  <label class="radio-option"><input type="radio" name="product" value="Anders / overleg"> Anders / wil graag overleggen</label>
+                </div>
+                <div class="error-msg">Kies wat je wilt bestellen.</div>
+              </div>
+              <div class="form-group" data-field="aantal">
+                <label for="aantal">Aantal <span class="required">*</span></label>
+                <input type="number" id="aantal" name="aantal" min="1" max="20" value="1" required>
+                <div class="error-msg">Vul een geldig aantal in (minimaal 1).</div>
+              </div>
+              <div class="form-group" data-field="kleur">
+                <label for="kleur">Gewenste kleur(en)</label>
+                <input type="text" id="kleur" name="kleur" placeholder="Bijv. zwart, beige, donkerblauw">
+                <p class="hint">Laat leeg als je nog geen voorkeur hebt.</p>
+              </div>
+              <div class="form-group" data-field="lengte">
+                <label for="lengte">Gewenste lengte / maat</label>
+                <select id="lengte" name="lengte">
+                  <option value="">Nog niet zeker / overleggen</option>
+                  <option value="Standaard lang">Standaard lang</option>
+                  <option value="Extra lang">Extra lang</option>
+                  <option value="Op maat (ik geef later maten)">Op maat</option>
+                </select>
+              </div>
+              <div class="form-group" data-field="gewenste_datum">
+                <label for="gewenste_datum">Gewenste leverdatum (indicatie)</label>
+                <input type="date" id="gewenste_datum" name="gewenste_datum">
+              </div>
+            </div>
+            <div class="form-step" data-step="3">
+              <h2>Extra informatie</h2>
+              <p class="step-desc">Vertel ons meer over je wensen.</p>
+              <div class="form-group" data-field="opmerkingen">
+                <label for="opmerkingen">Opmerkingen / bijzonderheden</label>
+                <textarea id="opmerkingen" name="opmerkingen" placeholder="Stofvoorkeur, maten, gelegenheid"></textarea>
+              </div>
+              <div class="form-group" data-field="hoe_gevonden">
+                <label for="hoe_gevonden">Hoe heb je ons gevonden?</label>
+                <select id="hoe_gevonden" name="hoe_gevonden">
+                  <option value="">Kies een optie</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="Via via / aanbeveling">Via via / aanbeveling</option>
+                  <option value="Google / zoeken">Google / zoeken</option>
+                  <option value="Anders">Anders</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-option">
+                  <input type="checkbox" name="privacy" value="Akkoord" required id="privacy">
+                  Ik ga akkoord met het verwerken van mijn gegevens voor deze aanvraag. <span class="required">*</span>
+                </label>
+                <div class="error-msg" style="margin-left:0;">Je moet akkoord gaan om te versturen.</div>
+              </div>
+            </div>
+            <div class="form-nav" id="formNav">
+              <button type="button" class="btn btn-secondary" id="prevBtn" style="visibility:hidden;">Vorige</button>
+              <button type="button" class="btn btn-primary" id="nextBtn">Volgende</button>
+              <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">Aanvraag versturen</button>
+            </div>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="icon">✓</div>
+            <h2>Bedankt!</h2>
+            <p>We hebben je aanvraag goed ontvangen. We nemen zo snel mogelijk contact met je op.</p>
+            <p style="margin-top:1.5rem;"><a href="index.html" class="btn btn-primary">Terug naar home</a></p>
+          </div>
+        </div>
+        <p style="text-align:center; margin-top:2rem; font-size:0.9rem;">
+          Liever via Instagram?
+          <a href="https://www.instagram.com/salafiaath/" target="_blank" rel="noopener noreferrer">DM @salafiaath</a>
+        </p>
       </div>
     </section>
   </main>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 Salafiaath. Alle rechten voorbehouden.</span>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+  <script src="js/form.js"></script>
 </body>
 </html>
