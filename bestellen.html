@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bestelling aanvragen | Salafiaath</title>
-  <meta name="description" content="Vraag een handgemaakte lange khimaar aan bij Salafiaath. Vul het formulier in.">
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/photos.css">
 </head>
 <body>
   <header class="header">
@@ -67,7 +67,7 @@
               </div>
               <div class="form-group" data-field="plaats">
                 <label for="plaats">Woonplaats</label>
-                <input type="text" id="plaats" name="plaats" placeholder="Bijv. Amsterdam" autocomplete="address-level2">
+                <input type="text" id="plaats" name="plaats" placeholder="Bijv. Amsterdam">
               </div>
             </div>
             <div class="form-step" data-step="2">
@@ -86,12 +86,10 @@
               <div class="form-group" data-field="aantal">
                 <label for="aantal">Aantal <span class="required">*</span></label>
                 <input type="number" id="aantal" name="aantal" min="1" max="20" value="1" required>
-                <div class="error-msg">Vul een geldig aantal in (minimaal 1).</div>
               </div>
               <div class="form-group" data-field="kleur">
                 <label for="kleur">Gewenste kleur(en)</label>
-                <input type="text" id="kleur" name="kleur" placeholder="Bijv. zwart, beige, donkerblauw">
-                <p class="hint">Laat leeg als je nog geen voorkeur hebt.</p>
+                <input type="text" id="kleur" name="kleur" placeholder="Bijv. zwart, beige">
               </div>
               <div class="form-group" data-field="lengte">
                 <label for="lengte">Gewenste lengte / maat</label>
@@ -99,37 +97,22 @@
                   <option value="">Nog niet zeker / overleggen</option>
                   <option value="Standaard lang">Standaard lang</option>
                   <option value="Extra lang">Extra lang</option>
-                  <option value="Op maat (ik geef later maten)">Op maat</option>
+                  <option value="Op maat">Op maat</option>
                 </select>
-              </div>
-              <div class="form-group" data-field="gewenste_datum">
-                <label for="gewenste_datum">Gewenste leverdatum (indicatie)</label>
-                <input type="date" id="gewenste_datum" name="gewenste_datum">
               </div>
             </div>
             <div class="form-step" data-step="3">
               <h2>Extra informatie</h2>
-              <p class="step-desc">Vertel ons meer over je wensen.</p>
               <div class="form-group" data-field="opmerkingen">
-                <label for="opmerkingen">Opmerkingen / bijzonderheden</label>
+                <label for="opmerkingen">Opmerkingen</label>
                 <textarea id="opmerkingen" name="opmerkingen" placeholder="Stofvoorkeur, maten, gelegenheid"></textarea>
-              </div>
-              <div class="form-group" data-field="hoe_gevonden">
-                <label for="hoe_gevonden">Hoe heb je ons gevonden?</label>
-                <select id="hoe_gevonden" name="hoe_gevonden">
-                  <option value="">Kies een optie</option>
-                  <option value="Instagram">Instagram</option>
-                  <option value="Via via / aanbeveling">Via via / aanbeveling</option>
-                  <option value="Google / zoeken">Google / zoeken</option>
-                  <option value="Anders">Anders</option>
-                </select>
               </div>
               <div class="form-group">
                 <label class="checkbox-option">
                   <input type="checkbox" name="privacy" value="Akkoord" required id="privacy">
-                  Ik ga akkoord met het verwerken van mijn gegevens voor deze aanvraag. <span class="required">*</span>
+                  Ik ga akkoord met het verwerken van mijn gegevens. <span class="required">*</span>
                 </label>
-                <div class="error-msg" style="margin-left:0;">Je moet akkoord gaan om te versturen.</div>
+                <div class="error-msg">Je moet akkoord gaan om te versturen.</div>
               </div>
             </div>
             <div class="form-nav" id="formNav">
@@ -141,24 +124,14 @@
           <div class="form-success" id="formSuccess">
             <div class="icon">✓</div>
             <h2>Bedankt!</h2>
-            <p>We hebben je aanvraag goed ontvangen. We nemen zo snel mogelijk contact met je op.</p>
+            <p>We hebben je aanvraag ontvangen. We nemen zo snel mogelijk contact op.</p>
             <p style="margin-top:1.5rem;"><a href="index.html" class="btn btn-primary">Terug naar home</a></p>
           </div>
         </div>
-        <p style="text-align:center; margin-top:2rem; font-size:0.9rem;">
-          Liever via Instagram?
-          <a href="https://www.instagram.com/salafiaath/" target="_blank" rel="noopener noreferrer">DM @salafiaath</a>
-        </p>
+        <p style="text-align:center;margin-top:2rem;">Liever Instagram? <a href="https://www.instagram.com/salafiaath/" target="_blank" rel="noopener">DM @salafiaath</a></p>
       </div>
     </section>
   </main>
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <span>© 2026 Salafiaath. Alle rechten voorbehouden.</span>
-      </div>
-    </div>
-  </footer>
   <script src="js/main.js"></script>
   <script src="js/form.js"></script>
 </body>
