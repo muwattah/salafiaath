@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const setMenu = function (open) {
     navLinks.classList.toggle('open', open);
     menuToggle.setAttribute('aria-expanded', String(open));
-    menuToggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+    const english = document.documentElement.lang === 'en';
+    menuToggle.setAttribute('aria-label', open ? (english ? 'Close menu' : 'Menu sluiten') : (english ? 'Open menu' : 'Menu openen'));
   };
   menuToggle.setAttribute('aria-expanded', 'false');
   menuToggle.addEventListener('click', function () {
