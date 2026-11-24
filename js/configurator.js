@@ -1,83 +1,34 @@
-const khimaarConfig = {
-  contact: {
-    instagram: 'https://www.instagram.com/salafiaath/',
-    instagramHandle: '@salafiaath',
-    whatsapp: ''
-  },
-  models: [
-    { id: 'long', name: 'Long Khimaar', price: 39.95, previewScale: 1 },
-    { id: 'extra-long', name: 'Extra Long Khimaar', price: 44.95, previewScale: 1.08 }
-  ],
-  coverages: [
-    { id: 'standard', name: 'Standard', extra: 0, length: 0.86 },
-    { id: 'long', name: 'Long', extra: 0, length: 0.94 },
-    { id: 'extra', name: 'Extra Coverage', extra: 5, length: 1.04 }
-  ],
-  fabrics: [
-    { id: 'nida', name: 'Nida', breath: 3, weight: 4, drape: 4, summer: 3, sheer: false },
-    { id: 'medina', name: 'Medina Silk', breath: 4, weight: 3, drape: 5, summer: 4, sheer: false },
-    { id: 'jazz', name: 'Jazz', breath: 4, weight: 2, drape: 4, summer: 5, sheer: false },
-    { id: 'light', name: 'Lightweight', breath: 5, weight: 1, drape: 3, summer: 5, sheer: true }
-  ],
-  colors: [
-    { id: 'black', name: 'Black', hex: '#141414' },
-    { id: 'mocha', name: 'Mocha', hex: '#6B4F3A' },
-    { id: 'olive', name: 'Olive', hex: '#4A5333' },
-    { id: 'taupe', name: 'Taupe', hex: '#8A7A6B' },
-    { id: 'navy', name: 'Navy', hex: '#1C2A44' },
-    { id: 'chocolate', name: 'Chocolate', hex: '#3B2418' }
-  ],
-  chin: [
-    { id: 'standard', name: 'Standaard' },
-    { id: 'narrow', name: 'Smaller' },
-    { id: 'wide', name: 'Ruimer' }
-  ],
-  head: [
-    { id: 'standard', name: 'Standaard' },
-    { id: 'custom', name: 'Eigen maat' }
-  ],
-  extras: { customSize: 3 },
-  fitRules: [
-    { min: 0, max: 149, size: 'XS' },
-    { min: 150, max: 159, size: 'S' },
-    { min: 160, max: 166, size: 'M' },
-    { min: 167, max: 173, size: 'L' },
-    { min: 174, max: 180, size: 'XL' },
-    { min: 181, max: 250, size: 'XXL' }
-  ]
-};
-function formatPrice(n){return '€'+n.toFixed(2).replace('.',',');}
-function findSize(cm){var n=Number(cm);if(!n||n<120||n>220)return null;var rule=khimaarConfig.fitRules.find(function(r){return n>=r.min&&n<=r.max;});return rule?rule.size:null;}
-function calcPrice(state){var model=khimaarConfig.models.find(function(m){return m.id===state.model;});var cov=khimaarConfig.coverages.find(function(c){return c.id===state.coverage;});var total=(model?model.price:0)+(cov?cov.extra:0);if(state.head==='custom')total+=khimaarConfig.extras.customSize;return total;}
-function labelOf(list,id){var item=list.find(function(x){return x.id===id;});return item?item.name:'—';}
-var cfgState={step:1,totalSteps:6,model:'long',height:'',coverage:'standard',fabric:'nida',color:'black',chin:'standard',head:'standard',headCm:''};
-function dots(score){var html='<span class="score" aria-hidden="true">';for(var i=1;i<=5;i++)html+='<i class="'+(i<=score?'on':'')+'"></i>';return html+'</span>';}
-function renderOptions(){
-  document.getElementById('cfgModels').innerHTML=khimaarConfig.models.map(function(m){return '<button type="button" class="choice'+(cfgState.model===m.id?' is-on':'')+'" data-k="model" data-v="'+m.id+'"><strong>'+m.name+'</strong><span>'+formatPrice(m.price)+'</span></button>';}).join('');
-  document.getElementById('cfgCoverage').innerHTML=khimaarConfig.coverages.map(function(c){return '<button type="button" class="choice'+(cfgState.coverage===c.id?' is-on':'')+'" data-k="coverage" data-v="'+c.id+'"><strong>'+c.name+'</strong><span>'+(c.extra?'+'+formatPrice(c.extra):'inbegrepen')+'</span></button>';}).join('');
-  document.getElementById('cfgFabrics').innerHTML=khimaarConfig.fabrics.map(function(f){return '<button type="button" class="fabric'+(cfgState.fabric===f.id?' is-on':'')+'" data-k="fabric" data-v="'+f.id+'"><strong>'+f.name+'</strong><ul><li>Luchtigheid '+dots(f.breath)+'</li><li>Dikte '+dots(f.weight)+'</li><li>Drape '+dots(f.drape)+'</li><li>Zomer '+dots(f.summer)+'</li><li>Doorschijnend: '+(f.sheer?'ja':'nee')+'</li></ul></button>';}).join('');
-  document.getElementById('cfgColors').innerHTML=khimaarConfig.colors.map(function(c){return '<button type="button" class="swatch'+(cfgState.color===c.id?' is-on':'')+'" data-k="color" data-v="'+c.id+'" style="--sw:'+c.hex+'" aria-label="'+c.name+'">'+'<span></span>'+c.name+'</button>';}).join('');
-  document.getElementById('cfgChin').innerHTML=khimaarConfig.chin.map(function(c){return '<button type="button" class="choice slim'+(cfgState.chin===c.id?' is-on':'')+'" data-k="chin" data-v="'+c.id+'">'+c.name+'</button>';}).join('');
-  document.getElementById('cfgHead').innerHTML=khimaarConfig.head.map(function(c){return '<button type="button" class="choice slim'+(cfgState.head===c.id?' is-on':'')+'" data-k="head" data-v="'+c.id+'">'+c.name+'</button>';}).join('');
-}
-function updateAdvice(elId,height){var size=findSize(height);var el=document.getElementById(elId);if(!el)return size;if(!height){el.textContent='Vul je lichaamslengte in centimeters in.';return null;}if(!size){el.textContent='Vul een lengte tussen 120 en 220 cm in.';return null;}el.textContent='Voor jouw lengte adviseren wij maat '+size+'.';return size;}
-function updatePreview(){var color=khimaarConfig.colors.find(function(c){return c.id===cfgState.color;});var model=khimaarConfig.models.find(function(m){return m.id===cfgState.model;});var cov=khimaarConfig.coverages.find(function(c){return c.id===cfgState.coverage;});var root=document.getElementById('cfgPreview');if(!root)return;root.style.setProperty('--khimaar',color?color.hex:'#141414');var len=(cov?cov.length:0.9)*(model?model.previewScale:1);root.style.setProperty('--fall',String(len));var size=findSize(cfgState.height);var mark=document.getElementById('fitMark');if(mark){var h=Number(cfgState.height)||165;var t=Math.min(0.92,Math.max(0.55,0.58+(h-150)*0.006));mark.style.top=(t*100)+'%';mark.textContent=size?'valt ~ maat '+size:'lengte';}}
-function updateSummary(){var size=findSize(cfgState.height)||'—';var price=calcPrice(cfgState);var rows=[['Model',labelOf(khimaarConfig.models,cfgState.model)],['Kleur',labelOf(khimaarConfig.colors,cfgState.color)],['Stof',labelOf(khimaarConfig.fabrics,cfgState.fabric)],['Lichaamslengte',cfgState.height?cfgState.height+' cm':'—'],['Aanbevolen maat',size],['Dekking',labelOf(khimaarConfig.coverages,cfgState.coverage)],['Kinopening',labelOf(khimaarConfig.chin,cfgState.chin)],['Hoofdomtrek',cfgState.head==='custom'&&cfgState.headCm?cfgState.headCm+' cm':labelOf(khimaarConfig.head,cfgState.head)]];document.getElementById('cfgSummary').innerHTML=rows.map(function(r){return '<li><span>'+r[0]+'</span><strong>'+r[1]+'</strong></li>';}).join('');document.getElementById('cfgPrice').textContent=formatPrice(price);document.getElementById('cfgLivePrice').textContent=formatPrice(price);}
-function orderText(){var size=findSize(cfgState.height)||'—';return ['Assalamu alaykum,','','Ik wil graag deze Salafiaath khimaar bestellen:','','Model: '+labelOf(khimaarConfig.models,cfgState.model),'Kleur: '+labelOf(khimaarConfig.colors,cfgState.color),'Stof: '+labelOf(khimaarConfig.fabrics,cfgState.fabric),'Lichaamslengte: '+(cfgState.height?cfgState.height+' cm':'—'),'Aanbevolen maat: '+size,'Dekking: '+labelOf(khimaarConfig.coverages,cfgState.coverage),'Kinopening: '+labelOf(khimaarConfig.chin,cfgState.chin),'Hoofdomtrek: '+(cfgState.head==='custom'&&cfgState.headCm?cfgState.headCm+' cm':labelOf(khimaarConfig.head,cfgState.head)),'Prijs: '+formatPrice(calcPrice(cfgState))].join('\n');}
-function showStep(n){cfgState.step=n;document.querySelectorAll('.cfg-pane').forEach(function(p){p.hidden=Number(p.getAttribute('data-step'))!==n;});document.getElementById('cfgBar').style.width=(((n-1)/(cfgState.totalSteps-1))*100)+'%';document.getElementById('cfgStepLabel').textContent='Stap '+n+' van '+cfgState.totalSteps;document.getElementById('cfgPrev').disabled=n===1;document.getElementById('cfgNext').hidden=n===cfgState.totalSteps;document.getElementById('cfgOrderWrap').hidden=n!==cfgState.totalSteps;document.getElementById('cfgCustomHead').hidden=cfgState.head!=='custom';if(n===cfgState.totalSteps)updateSummary();updatePreview();}
-function openConfigurator(){var modal=document.getElementById('configurator');modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';renderOptions();showStep(1);}
-function closeConfigurator(){var modal=document.getElementById('configurator');modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-document.addEventListener('DOMContentLoaded',function(){
-  renderOptions();updatePreview();updateSummary();
-  document.getElementById('cfgChoices').addEventListener('click',function(e){var btn=e.target.closest('[data-k]');if(!btn)return;cfgState[btn.getAttribute('data-k')]=btn.getAttribute('data-v');renderOptions();document.getElementById('cfgCustomHead').hidden=cfgState.head!=='custom';updatePreview();updateSummary();});
-  document.getElementById('cfgHeight').addEventListener('input',function(e){cfgState.height=e.target.value;updateAdvice('cfgFitMsg',cfgState.height);updatePreview();updateSummary();});
-  document.getElementById('cfgHeadCm').addEventListener('input',function(e){cfgState.headCm=e.target.value;updateSummary();});
-  document.getElementById('cfgNext').addEventListener('click',function(){if(cfgState.step===2&&!findSize(cfgState.height)){updateAdvice('cfgFitMsg',cfgState.height);document.getElementById('cfgHeight').focus();return;}showStep(Math.min(cfgState.totalSteps,cfgState.step+1));});
-  document.getElementById('cfgPrev').addEventListener('click',function(){showStep(Math.max(1,cfgState.step-1));});
-  document.querySelectorAll('[data-open-config]').forEach(function(btn){btn.addEventListener('click',openConfigurator);});
-  document.getElementById('cfgClose').addEventListener('click',closeConfigurator);
-  document.getElementById('configurator').addEventListener('click',function(e){if(e.target.id==='configurator')closeConfigurator();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeConfigurator();});
-  document.getElementById('cfgOrder').addEventListener('click',function(){var text=orderText();var wa=khimaarConfig.contact.whatsapp;if(wa){window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(text),'_blank','noopener');return;}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).catch(function(){});}window.open(khimaarConfig.contact.instagram,'_blank','noopener');var note=document.getElementById('cfgCopied');note.hidden=false;note.textContent='Bestelling gekopieerd. Plak de tekst in Instagram DM '+khimaarConfig.contact.instagramHandle+'.';});
-  var mini=document.getElementById('fitFinderInput');if(mini){mini.addEventListener('input',function(e){updateAdvice('fitFinderMsg',e.target.value);var size=findSize(e.target.value);var bar=document.getElementById('fitFinderBar');if(!bar)return;var h=Number(e.target.value)||160;bar.style.height=Math.min(100,Math.max(8,(h-145)*2.2))+'%';bar.setAttribute('data-size',size||'');});}
+'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+ const query=new URLSearchParams(location.search); let lang='nl'; try{lang=localStorage.getItem('salafiaathLang')==='en'?'en':'nl';}catch(e){} if(['nl','en'].includes(query.get('lang')))lang=query.get('lang');
+ const t=(nl,en)=>lang==='en'?en:nl;
+ document.querySelectorAll('[data-en]').forEach(el=>el.dataset.nl=el.textContent);
+ const models=[{id:'long',nl:'Lange khimaar',en:'Long khimaar',price:39.95,scale:.90},{id:'extra-long',nl:'Extra lange khimaar',en:'Extra-long khimaar',price:44.95,scale:1.03}];
+ const fabrics=[{id:'nida',name:'Nida',nl:'Iets dikker, soepel vallend; niet doorschijnend.',en:'Slightly thicker, flowing; not sheer.'},{id:'medina',name:'Medina Silk',nl:'Luchtig en soepel vallend; niet doorschijnend.',en:'Airy and flowing; not sheer.'},{id:'jazz',name:'Jazz',nl:'Licht en luchtig; niet doorschijnend.',en:'Light and airy; not sheer.'},{id:'light',name:'Lightweight',nl:'Zeer licht; kan doorschijnend zijn.',en:'Very lightweight; may be sheer.'}];
+ const colors=[['black','Zwart','Black','#141414'],['mocha','Mokka','Mocha','#6B4F3A'],['olive','Olijfgroen','Olive','#4A5333'],['taupe','Taupe','Taupe','#8A7A6B'],['navy','Donkerblauw','Navy','#1C2A44'],['chocolate','Chocoladebruin','Chocolate','#3B2418']];
+ const money=n=>new Intl.NumberFormat(lang==='en'?'en-IE':'nl-BE',{style:'currency',currency:'EUR'}).format(n);
+ const el=id=>document.getElementById(id);
+ const sizeFor=v=>{let n=Number(v);return !Number.isInteger(n)||n<120||n>220?'':n<150?'XS':n<160?'S':n<167?'M':n<174?'L':n<181?'XL':'XXL'};
+ const advice=(v,target)=>{const size=sizeFor(v);target.textContent=!v?'':size?t('Indicatief maatadvies: ','Indicative size guidance: ')+size:t('Vul een hele lengte tussen 120 en 220 cm in.','Enter a whole number between 120 and 220 cm.');return size;};
+ const form=el('requestForm'), fit=el('fitFinderInput'); let step=1, busy=false, sent=false; const state={model:models.some(m=>m.id===query.get('model'))?query.get('model'):'long',fabric:'nida',color:'black'};
+ const currentModel=()=>models.find(x=>x.id===state.model);
+ const currentFabric=()=>fabrics.find(x=>x.id===state.fabric);
+ const currentColor=()=>colors.find(x=>x[0]===state.color);
+ function updateFit(){if(!fit)return;const s=advice(fit.value,el('fitFinderMsg'));const url=new URL('bestellen.html',location.href);if(s)url.searchParams.set('height',fit.value);url.searchParams.set('lang',lang);el('fitLink').href=url.href;}
+ function syncLinks(){document.querySelectorAll('a[href]').forEach(a=>{const raw=a.getAttribute('href');if(raw.startsWith('#'))return;try{const url=new URL(raw,location.href);if(url.origin===location.origin&&/\/(index|bestellen)\.html$/.test(url.pathname)){url.searchParams.set('lang',lang);a.href=url.href;}}catch(e){}});}
+ function applyLanguage(){document.documentElement.lang=lang;document.title=form?t('Bestelling aanvragen | Salafiaath','Request a khimaar | Salafiaath'):t('Handgemaakte khimaars | Salafiaath','Handmade khimaars | Salafiaath');document.querySelectorAll('[data-en]').forEach(x=>{x.textContent=lang==='en'?x.dataset.en:x.dataset.nl;});el('language').textContent=lang==='en'?'NL':'EN';el('language').setAttribute('aria-label',t('Switch to English','Schakel naar Nederlands'));syncLinks();updateFit();if(form){renderChoices();updatePreview();updateSummary();showStep(step,false);if(el('height').value)advice(el('height').value,el('sizeAdvice'));}}
+ el('language').addEventListener('click',()=>{lang=lang==='en'?'nl':'en';try{localStorage.setItem('salafiaathLang',lang);}catch(e){}applyLanguage();});
+ if(fit){fit.addEventListener('input',updateFit);if(sizeFor(query.get('height')))fit.value=query.get('height');}
+ function choice(container,key,id,title,desc,color){const b=document.createElement('button');b.type='button';b.className=(key==='color'?'swatch':'choice')+(state[key]===id?' is-on':'');b.setAttribute('aria-pressed',String(state[key]===id));if(color){const sw=document.createElement('span');sw.style.setProperty('--sw',color);b.append(sw);}const label=document.createElement('strong');label.textContent=title;b.append(label);if(desc){const p=document.createElement('span');p.textContent=desc;b.append(p);}b.addEventListener('click',()=>{state[key]=id;container.querySelectorAll('button').forEach(x=>{const selected=x===b;x.classList.toggle('is-on',selected);x.setAttribute('aria-pressed',String(selected));});updatePreview();updateSummary();});container.append(b);}
+ function renderChoices(){for(const id of ['models','fabrics','colors'])el(id).replaceChildren();models.forEach(m=>choice(el('models'),'model',m.id,m[lang],money(m.price)));fabrics.forEach(f=>choice(el('fabrics'),'fabric',f.id,f.name,f[lang]));colors.forEach(c=>choice(el('colors'),'color',c[0],c[lang==='en'?2:1],null,c[3]));}
+ function quantity(){let n=Number(el('quantity').value);return Number.isInteger(n)&&n>=1&&n<=20?n:1;}
+ function updatePreview(){const p=el('cfgPreview');p.style.setProperty('--khimaar',currentColor()[3]);p.style.setProperty('--fall',String(currentModel().scale));el('price').textContent=money(currentModel().price*quantity());}
+ function rows(){const m=currentModel(),f=currentFabric(),c=currentColor(),height=el('height').value;return [[t('Model','Model'),m[lang]],[t('Stof','Fabric'),f.name],[t('Kleur','Colour'),c[lang==='en'?2:1]],[t('Lichaamslengte','Height'),height?height+' cm':'—'],[t('Indicatieve maat','Indicative size'),sizeFor(height)||'—'],[t('Aantal','Quantity'),String(quantity())],[t('Indicatieve productprijs','Estimated product price'),money(m.price*quantity())],[t('Naam','Name'),el('name').value],[t('E-mail','Email'),el('email').value],[t('Telefoon','Phone'),el('phone').value],[t('Opmerkingen','Notes'),el('notes').value||'—']];}
+ function updateSummary(){const target=el('summary');target.replaceChildren();rows().forEach(([k,v])=>{const d=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=k;dd.textContent=v;d.append(dt,dd);target.append(d);});}
+ function clearError(){el('formError').hidden=true;el('formError').textContent='';}
+ function fail(message,field){const box=el('formError');box.textContent=message;box.hidden=false;if(field){field.focus();field.setAttribute('aria-invalid','true');}return false;}
+ function valid(n){clearError();if(n===1&&el('height').value&&!sizeFor(el('height').value))return fail(t('Controleer je lichaamslengte of laat het veld leeg.','Check your height or leave it blank.'),el('height'));if(n===3){const name=el('name'),email=el('email'),phone=el('phone'),q=el('quantity');if(!name.value.trim())return fail(t('Vul je naam in.','Enter your name.'),name);if(!email.validity.valid||!email.value.trim())return fail(t('Vul een geldig e-mailadres in.','Enter a valid email address.'),email);const digits=phone.value.replace(/\D/g,'');if(!/^\+?[0-9() .-]+$/.test(phone.value.trim())||digits.length<7||digits.length>15)return fail(t('Vul een geldig telefoonnummer in, liefst met landcode.','Enter a valid phone number, preferably with country code.'),phone);if(!q.validity.valid||!Number.isInteger(Number(q.value)))return fail(t('Kies een aantal van 1 tot 20.','Choose a quantity from 1 to 20.'),q);}if(n===4&&!el('privacyConsent').checked)return fail(t('Bevestig dat je de privacyinformatie hebt gelezen.','Confirm you have read the privacy information.'),el('privacyConsent'));return true;}
+ function showStep(n,focus=true){step=n;form.querySelectorAll('.form-step').forEach(p=>{const on=Number(p.dataset.step)===n;p.hidden=!on;p.classList.toggle('active',on);});document.querySelectorAll('.progress-step').forEach(p=>{const on=Number(p.dataset.step)===n;p.classList.toggle('active',on);if(on)p.setAttribute('aria-current','step');else p.removeAttribute('aria-current');});el('prevBtn').hidden=n===1;el('nextBtn').hidden=n===4;el('submitBtn').hidden=n!==4;clearError();if(n===4)updateSummary();if(focus){const h=form.querySelector('.form-step.active h2');h.tabIndex=-1;h.focus();h.scrollIntoView({block:'nearest'});}}
+ if(form){if(sizeFor(query.get('height')))el('height').value=query.get('height');form.addEventListener('input',e=>{e.target.removeAttribute('aria-invalid');if(e.target.id==='height')advice(e.target.value,el('sizeAdvice'));updatePreview();updateSummary();});el('prevBtn').addEventListener('click',()=>{if(!busy)showStep(Math.max(1,step-1));});el('nextBtn').addEventListener('click',()=>{if(!busy&&valid(step))showStep(Math.min(4,step+1));});form.addEventListener('submit',async e=>{e.preventDefault();if(busy||sent)return;if(step!==4){if(valid(step))showStep(step+1);return;}for(const n of [1,3,4])if(!valid(n)){showStep(n);valid(n);return;}busy=true;el('submitBtn').disabled=true;el('prevBtn').disabled=true;el('language').disabled=true;const data=Object.fromEntries(new FormData(form));Object.assign(data,{model:currentModel().nl,stof:currentFabric().name,kleur:currentColor()[1],lichaamslengte:el('height').value||'Niet opgegeven',maatadvies:sizeFor(el('height').value)||'Niet opgegeven',aantal:quantity(),indicatieve_productprijs:'EUR '+(currentModel().price*quantity()).toFixed(2),naam:el('name').value.trim(),email:el('email').value.trim(),telefoon:el('phone').value.trim(),opmerkingen:el('notes').value.trim(),taal:lang,privacy:'Gelezen / aanvraag akkoord'});for(const k of ['height','name','phone','quantity','notes'])delete data[k];try{const res=await fetch(form.action,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)});const result=await res.json();if(!res.ok||!(result.success===true||result.success==='true'))throw Error('Unconfirmed submission');sent=true;form.hidden=true;el('formProgress').hidden=true;el('formSuccess').classList.add('show');el('formSuccess').tabIndex=-1;el('formSuccess').focus();}catch(err){fail(t('Verzending kon niet worden bevestigd. Je gegevens blijven staan. Probeer het opnieuw of neem contact op via Instagram.','Sending could not be confirmed. Your details are still here. Try again or contact us on Instagram.'));}finally{busy=false;el('submitBtn').disabled=false;el('prevBtn').disabled=false;el('language').disabled=false;}});}
+ applyLanguage();
 });
