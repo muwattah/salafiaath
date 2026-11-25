@@ -22,7 +22,57 @@ document.addEventListener('DOMContentLoaded', () => {
  function choice(container,key,id,title,desc,color){const b=document.createElement('button');b.type='button';b.className=(key==='color'?'swatch':'choice')+(state[key]===id?' is-on':'');b.setAttribute('aria-pressed',String(state[key]===id));if(color){const sw=document.createElement('span');sw.style.setProperty('--sw',color);b.append(sw);}const label=document.createElement('strong');label.textContent=title;b.append(label);if(desc){const p=document.createElement('span');p.textContent=desc;b.append(p);}b.addEventListener('click',()=>{state[key]=id;container.querySelectorAll('button').forEach(x=>{const selected=x===b;x.classList.toggle('is-on',selected);x.setAttribute('aria-pressed',String(selected));});updatePreview();updateSummary();});container.append(b);}
  function renderChoices(){for(const id of ['models','fabrics','colors'])el(id).replaceChildren();models.forEach(m=>choice(el('models'),'model',m.id,m[lang],money(m.price)));fabrics.forEach(f=>choice(el('fabrics'),'fabric',f.id,f.name,f[lang]));colors.forEach(c=>choice(el('colors'),'color',c[0],c[lang==='en'?2:1],null,c[3]));}
  function quantity(){let n=Number(el('quantity').value);return Number.isInteger(n)&&n>=1&&n<=20?n:1;}
- function updatePreview(){const p=el('cfgPreview');p.style.setProperty('--khimaar',currentColor()[3]);p.style.setProperty('--fall',String(currentModel().scale));el('price').textContent=money(currentModel().price*quantity());}
+ // Atelier preview: recolour the actual fabric pixels, not the mannequin's skin.
+ let sourcePixels=null, shadeCanvas=null, lastPaint='', previewWaiting=false;
+ const clamp01=x=>Math.min(1,Math.max(0,x));
+ function paintAtelier(){
+   const img=el('previewSource'),canvas=el('previewCanvas');
+   if(!img||!canvas)return;
+   if(!img.complete||!img.naturalWidth){
+     if(!previewWaiting){previewWaiting=true;img.addEventListener('load',()=>{previewWaiting=false;paintAtelier();},{once:true});}
+     return;
+   }
+   try{
+     const w=img.naturalWidth,h=img.naturalHeight,ctx=canvas.getContext('2d');
+     if(!ctx)return;
+     const key=state.color+'|'+state.model;
+     if(lastPaint===key)return;
+     if(!sourcePixels){shadeCanvas=document.createElement('canvas');shadeCanvas.width=w;shadeCanvas.height=h;const sc=shadeCanvas.getContext('2d',{willReadFrequently:true});sc.drawImage(img,0,0,w,h);sourcePixels=sc.getImageData(0,0,w,h);}
+     const hex=currentColor()[3].slice(1),rgb=[0,2,4].map(i=>parseInt(hex.slice(i,i+2),16));
+     const shaded=new ImageData(new Uint8ClampedArray(sourcePixels.data),w,h),d=shaded.data;
+     for(let i=0;i<d.length;i+=4){
+       if(!d[i+3])continue;
+       const r=d[i],g=d[i+1],b=d[i+2],lum=.2126*r+.7152*g+.0722*b;
+       // The warm skin areas are distinct from the neutral charcoal fabric.
+       const y=Math.floor(i/4/w)/h,x=(i/4%w)/w;
+       const skinRegion=(y<.15&&x>.35&&x<.65)||(y>.47&&y<.59&&(x<.25||x>.75));
+       const skin=skinRegion?clamp01(Math.min((r-b-5)/14,(r-g-2)/8)):0;
+       const shade=Math.pow(Math.max(.04,lum/82),1.22);
+       const highlight=Math.max(0,lum-76)*.34;
+       for(let c=0;c<3;c++){const target=Math.min(255,rgb[c]*shade+highlight+2);d[i+c]=d[i+c]*skin+target*(1-skin);}
+     }
+     shadeCanvas.getContext('2d').putImageData(shaded,0,0);
+     canvas.width=w;canvas.height=h;
+     ctx.clearRect(0,0,w,h);
+     if(state.model==='long'){
+       // Shorten the lower drape only, keeping head, hands and floor-length base in place.
+       const a=Math.round(h*.59),b=Math.round(h*.80),end=Math.round(h*.74);
+       ctx.drawImage(shadeCanvas,0,0,w,a,0,0,w,a);
+       ctx.drawImage(shadeCanvas,0,a,w,b-a,0,a,w,end-a);
+       ctx.drawImage(shadeCanvas,0,b,w,h-b,0,end,w,h-end);
+     }else ctx.drawImage(shadeCanvas,0,0);
+     canvas.hidden=false;img.hidden=true;lastPaint=key;
+   }catch(e){canvas.hidden=true;img.hidden=false;}
+ }
+ function updatePreview(){
+   const p=el('cfgPreview');p.style.setProperty('--khimaar',currentColor()[3]);p.style.setProperty('--fall',String(currentModel().scale));
+   el('price').textContent=money(currentModel().price*quantity());
+   const selected=currentModel()[lang]+' · '+currentFabric().name+' · '+currentColor()[lang==='en'?2:1];
+   const label=el('previewSelection');if(label)label.textContent=selected;
+   const canvas=el('previewCanvas');if(canvas)canvas.setAttribute('aria-label',t('Illustratief voorbeeld: ','Illustrative preview: ')+selected);
+   const img=el('previewSource');if(img)img.alt=t('Gezichtsloze khimaar mannequin','Faceless khimaar mannequin');
+   paintAtelier();
+ }
  function rows(){const m=currentModel(),f=currentFabric(),c=currentColor(),height=el('height').value;return [[t('Model','Model'),m[lang]],[t('Stof','Fabric'),f.name],[t('Kleur','Colour'),c[lang==='en'?2:1]],[t('Lichaamslengte','Height'),height?height+' cm':'—'],[t('Indicatieve maat','Indicative size'),sizeFor(height)||'—'],[t('Aantal','Quantity'),String(quantity())],[t('Indicatieve productprijs','Estimated product price'),money(m.price*quantity())],[t('Naam','Name'),el('name').value],[t('E-mail','Email'),el('email').value],[t('Telefoon','Phone'),el('phone').value],[t('Opmerkingen','Notes'),el('notes').value||'—']];}
  function updateSummary(){const target=el('summary');target.replaceChildren();rows().forEach(([k,v])=>{const d=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=k;dd.textContent=v;d.append(dt,dd);target.append(d);});}
  function clearError(){el('formError').hidden=true;el('formError').textContent='';}
