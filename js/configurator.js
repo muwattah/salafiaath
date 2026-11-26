@@ -97,16 +97,20 @@ document.addEventListener('DOMContentLoaded', () => {
  // EmailJS browser integration. These are public identifiers, never private credentials.
  const emailConfig=Object.freeze({service:'service_gbgvxem',ownerTemplate:'template_qw7itxx',customerTemplate:'template_7my1iwq',publicKey:'cdgjPSmdVsaYu1lW5'});
  async function sendTemplate(template,params){
-   const controller=new AbortController();
-   const timeout=setTimeout(()=>controller.abort(),25000);
+   // Multipart form data is a CORS-safelisted content type: avoid the JSON preflight.
+   const body=new FormData();
+   body.append('service_id',emailConfig.service);
+   body.append('template_id',template);
+   body.append('user_id',emailConfig.publicKey);
+   for(const [key,value] of Object.entries(params))body.append(key,String(value));
+   const controller=typeof AbortController==='function'?new AbortController():null;
+   const timeout=controller?setTimeout(()=>controller.abort(),35000):null;
    try{
-     const response=await fetch('https://api.emailjs.com/api/v1.0/email/send',{
-       method:'POST',headers:{'Content-Type':'application/json'},
-       body:JSON.stringify({service_id:emailConfig.service,template_id:template,user_id:emailConfig.publicKey,template_params:params}),
-       signal:controller.signal
-     });
+     const options={method:'POST',body};
+     if(controller)options.signal=controller.signal;
+     const response=await fetch('https://api.emailjs.com/api/v1.0/email/send-form',options);
      if(!response.ok){const error=new Error('Email service returned '+response.status);error.status=response.status;throw error;}
-   }finally{clearTimeout(timeout);}
+   }finally{if(timeout!==null)clearTimeout(timeout);}
  }
  function buildEmailParams(){
    const height=el('height').value;
@@ -150,7 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
    location.assign(url.href);
  }catch(err){
    const knownRejected=Number.isInteger(err.status)&&err.status>=400&&err.status<500;
-   fail(knownRejected?t('Je aanvraag is niet geaccepteerd door de e-maildienst. Je gegevens blijven staan. Probeer opnieuw of neem contact op met Salafiaath.','The email service did not accept your request. Your details remain on this page. Try again or contact Salafiaath.'):t('We konden niet controleren of je aanvraag is ontvangen. Neem contact op met Salafiaath met aanvraagnummer '+requestNumber+' voordat je opnieuw verstuurt.','We could not verify whether your request was received. Contact Salafiaath with reference '+requestNumber+' before submitting again.'));
+   const diagnostic=Number.isInteger(err.status)?'HTTP-'+err.status:err.name==='AbortError'?'TIMEOUT':'NETWORK';
+   fail(knownRejected?t('Je aanvraag is niet geaccepteerd door de e-maildienst. Je gegevens blijven staan. Probeer opnieuw of neem contact op met Salafiaath.','The email service did not accept your request. Your details remain on this page. Try again or contact Salafiaath.'):t('We konden niet controleren of je aanvraag is ontvangen. Neem contact op met Salafiaath met aanvraagnummer '+requestNumber+' voordat je opnieuw verstuurt.','We could not verify whether your request was received. Contact Salafiaath with reference '+requestNumber+' before submitting again.')+' ['+diagnostic+']');
  }finally{if(!sent){busy=false;form.removeAttribute('aria-busy');el('submitBtn').disabled=false;el('prevBtn').disabled=false;el('language').disabled=false;submitLabel.textContent=t('Aanvraag versturen','Send request');}}
  });}
  window.addEventListener('pageshow',e=>{if(e.persisted&&form&&busy){busy=false;form.removeAttribute('aria-busy');el('submitBtn').disabled=false;el('prevBtn').disabled=false;el('language').disabled=false;el('submitBtn').querySelector('[data-en]').textContent=t('Aanvraag versturen','Send request');}});applyLanguage();
